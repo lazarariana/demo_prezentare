@@ -21,7 +21,7 @@ jobs:
 
       - name: Build
         run: |
-          dotnet publish sast/PhpAnalyzer.csproj \
+          dotnet publish sast/sast.csproj \
             --nologo \
             -c Release \
             -r linux-x64 \
@@ -52,8 +52,8 @@ jobs:
 
       - name: Scan
         run: |
-          chmod +x ./bin/PhpAnalyzer
-          ./bin/PhpAnalyzer scan "$GITHUB_WORKSPACE" \
+          chmod +x ./bin/sast
+          ./bin/sast scan "$GITHUB_WORKSPACE" \
             --no-save \
             --sarif sast.sarif
         continue-on-error: true
@@ -70,7 +70,7 @@ jobs:
           github.event_name == 'push' &&
           github.event.before != '0000000000000000000000000000000000000000'
         run: |
-          report=$(./bin/PhpAnalyzer diff "$GITHUB_WORKSPACE" \
+          report=$(./bin/sast diff "$GITHUB_WORKSPACE" \
             "${{ github.event.before }}" \
             "${{ github.sha }}" 2>&1)
           printf '%s\n' "$report"
